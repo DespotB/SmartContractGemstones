@@ -6,18 +6,22 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+
+//ALOT OF INFOS: https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-an-erc-721-nft
 contract MyNFT is
     ERC721,
     Ownable //remove ownable to make it mintable for others
 {
     using Counters for Counters.Counter;
+    using Strings for uint256;
+    
     Counters.Counter private _tokenIds;
 
     constructor(string memory _name, string memory _symbol)
         ERC721(_name, _symbol)
     {}
 
-    using Strings for uint256;
+    
 
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
