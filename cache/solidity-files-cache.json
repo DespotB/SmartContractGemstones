@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Despot\\OneDrive\\Dokumente\\NFTProj\\SmartContract\\gemstone-SmartContract\\SmartContractGemstones\\contracts\\gemstones.sol": {
-      "lastModificationDate": 1631818634158,
-      "contentHash": "ff8a0ec75ea881ac4fe78af006e7c57a",
+      "lastModificationDate": 1631822533659,
+      "contentHash": "6bdf592a2bfc31e5774e365c4b3a936e",
       "sourceName": "contracts/gemstones.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -36,7 +36,6 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "Example",
         "MyNFT"
       ]
     },
