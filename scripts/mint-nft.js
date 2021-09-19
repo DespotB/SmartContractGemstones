@@ -1,7 +1,13 @@
+// mint nft: node --trace-warnings scripts/mint-nft.js
+
 require('dotenv').config();
 const API_URL = process.env.API_URL;
 const PUBLIC_KEY = process.env.PUBLIC_KEY;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
+let metaDataURIs = [
+    {name: 'smaragd_raw', url: 'https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP'},
+    {name: 'rubin_drop', url: 'https://gateway.pinata.cloud/ipfs/QmQJJhsYKGdtWb1wR6H748oMY6jEbRiKRvPZxc7LJFw3Jy'}
+]
 
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(API_URL);
@@ -15,6 +21,8 @@ const nftContract = new web3.eth.Contract(contract.abi, contractAddress);
 async function mintNFT(tokenURI) {
     const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest'); //get latest nonce (keeps track of transaction numbers / security purposes - replay attacks)
 
+    // const tokenURI = getRandomURI(tokens);
+
     //transaction
     const tx = {
         'from': PUBLIC_KEY,
@@ -22,7 +30,7 @@ async function mintNFT(tokenURI) {
         'none': nonce,
         'gas': 500000,
         'maxPriorityFeePerGas': 1999999987,
-        'data': nftContract.methods.mint(PUBLIC_KEY, 1, tokenURI).encodeABI()
+        'data': nftContract.methods.mint(PUBLIC_KEY, 6, tokenURI).encodeABI() // change ID +1 or it won't mint
     };
 
     const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);
@@ -39,5 +47,9 @@ async function mintNFT(tokenURI) {
      });
 }
 
+function getRandomURI(tokenURIs) {
+    return tokenURIs[Math.floor(Math.random()*tokenURIs.length)];
+}
+
 //mint with hashcode of metadata from Pinata 
-mintNFT("https://gateway.pinata.cloud/ipfs/QmYueiuRNmL4MiA2GwtVMm6ZagknXnSpQnB3z2gWbz36hP");
+mintNFT("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
