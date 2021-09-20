@@ -30,7 +30,7 @@ async function mintNFT(tokenURI) {
         'none': nonce,
         'gas': 500000,
         'maxPriorityFeePerGas': 1999999987,
-        'data': nftContract.methods.mint(PUBLIC_KEY, 6, tokenURI).encodeABI() // change ID +1 or it won't mint
+        'data': nftContract.methods.mint(PUBLIC_KEY, 7, tokenURI).encodeABI() // change ID +1 or it won't mint
     };
 
     const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY);

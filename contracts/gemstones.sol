@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 //ALOT OF INFOS: https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-an-erc-721-nft
-contract MyNFT is
-    ERC721,
+contract Gemesis is
+    // ERC721,  
+    ERC721Enumerable,
     Ownable //remove ownable to make it mintable for others
 {
     using Counters for Counters.Counter;
@@ -17,11 +19,14 @@ contract MyNFT is
     
     Counters.Counter private _tokenIds;
 
+    // total supply
+    uint256 private maxSupply = 3;
+    uint256 public cost = 0.0001 ether;
+
     constructor(string memory _name, string memory _symbol)
         ERC721(_name, _symbol)
-    {}
-
-    
+    {
+    }
 
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
@@ -77,10 +82,18 @@ contract MyNFT is
 
     function mint(
         address _to,
-        uint256 _tokenId,
         string memory tokenURI_
-    ) external onlyOwner {
-        _mint(_to, _tokenId);
-        _setTokenURI(_tokenId, tokenURI_);
+    ) public virtual payable {
+        uint256 supply = totalSupply();
+
+        require(supply <= maxSupply);
+        require(msg.value >= cost, "Not enough ETH sent; check price!");
+
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        // _mint(_to, newTokenId);
+        _safeMint(_to, newTokenId);
+
+        _setTokenURI(newTokenId, tokenURI_);
     }
 }
