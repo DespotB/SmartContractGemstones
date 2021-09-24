@@ -13,8 +13,8 @@ async function main() {
   // const myNFT = await MyNFT.deploy("Gemesis", "Symbol");
     // const myNFT = await MyNFT.constructor("Gemesis", "Symbol").transact({'from': deployer, 'gas': 410000})
     const myNFT = await MyNFT.deploy("Gemesis", "GEM")
-    console.log("Token address:", myNFT.address);
-    console.log(myNFT.deployTransaction.hash);
+    console.log("Smart Contract address:", myNFT.address);
+    console.log("TRX hash", myNFT.deployTransaction.hash);
     await myNFT.deployed();
  }
  

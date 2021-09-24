@@ -19,20 +19,22 @@ contract Gemesis is
     
     Counters.Counter private _tokenIds;
 
+    //THIS CAN BE USEFULL FOR ANTI GAS WAR MECHANICS only x amount mintable by addres per hour
+    uint256 lastUpdated;
     // total supply
     uint256 private maxSupply = 3;
     uint256 public cost = 0.0001 ether;
+    mapping(address => uint256) private _mintCooldown;
+
+      // Optional mapping for token URIs
+    mapping(uint256 => string) private _tokenURIs;
+    // Base URI
+    string private _baseURIextended;
 
     constructor(string memory _name, string memory _symbol)
         ERC721(_name, _symbol)
     {
     }
-
-    // Optional mapping for token URIs
-    mapping(uint256 => string) private _tokenURIs;
-
-    // Base URI
-    string private _baseURIextended;
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
         _baseURIextended = baseURI_;
@@ -83,17 +85,39 @@ contract Gemesis is
     function mint(
         address _to,
         string memory tokenURI_
-    ) public virtual payable {
+    ) external virtual payable {
         uint256 supply = totalSupply();
 
-        require(supply <= maxSupply);
+        require(supply < maxSupply, "All NFT's have been minted");
+        require(oneHourHasPassed(_mintCooldown[_to]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
         require(msg.value >= cost, "Not enough ETH sent; check price!");
 
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
-        // _mint(_to, newTokenId);
         _safeMint(_to, newTokenId);
-
         _setTokenURI(newTokenId, tokenURI_);
+
+        //Update timestamp and safe last updated for this address
+        _mintCooldown[_to] = block.timestamp;
+    }
+
+    function eternalMint(
+        address _to,
+        string memory tokenURI_
+    ) external onlyOwner{
+        _tokenIds.increment();
+        _safeMint(_to, _tokenIds.current());
+        _setTokenURI(_tokenIds.current(), tokenURI_);  
+    }
+
+
+    function updateTimestamp() public {
+        lastUpdated = block.timestamp;
+    }
+
+    function oneHourHasPassed(
+        uint256 addressLastMintTimestamp
+    ) public view returns (bool) {
+        return (block.timestamp >= (addressLastMintTimestamp + 2 minutes));
     }
 }
