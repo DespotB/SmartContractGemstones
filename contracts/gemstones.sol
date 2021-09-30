@@ -21,44 +21,34 @@ contract Gemesis is
 
     string public baseURI;
     string public baseExtension = ".json";
+    string public notRevealedURI;
     string private baseURIextended;
-
-    bool public paused = false;
     uint256 public maxSupply = 100;
     uint256 public maxMintAmount = 20;
     uint256 public cost = 0.0001 ether;
+    uint256 public nftPerAddressLimit = 20;  //INCREASE THIS OVER TIME?
+    bool public paused = false;
+    bool public revealed = false;
+    bool public onlyWhitelisted = true;
     
-    address payable public payments;
-
+    address[] public whitelistedAddresses; //CHECK IF to use array or mapping
     mapping(address => bool) public whitelisted;
+
+
+    address payable public payments; //CHECK
+
     mapping(address => uint256) private mintCooldown;
-    mapping(uint256 => string) private tokenURIs;
+    mapping(uint256 => string) private tokenURIs; //We will need something similiar becuase we need to read the imgs randmoly not by order
     
 
-    constructor(string memory _name, string memory _symbol)
-        ERC721(_name, _symbol)
-    {
-    }
-
-    function setBaseURI(string memory baseURI_) external onlyOwner {
-         
-    baseURIextended = baseURI_;
-    }
-
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        require(
-            _exists(tokenId),
-            "ERC721Metadata: URI set of nonexistent token"
-        );
-        tokenURIs[tokenId] = _tokenURI;
-    }
-
-    function _baseURI() internal view virtual override returns (string memory) {
-        return  
-baseURIextended;
+    constructor(
+        string memory _name, 
+        string memory _symbol,
+        string memory _initBaseURI,
+        string memory _initNotRevealedUri
+    ) ERC721(_name, _symbol) {
+        setBaseURI(_initBaseURI);
+        setNotRevealedURI(_initNotRevealedUri);
     }
 
     function tokenURI(uint256 tokenId)
@@ -88,7 +78,7 @@ baseURIextended;
         return string(abi.encodePacked(base, tokenId.toString()));
     }
 
-    function mint(address _to, uint256 _mintAmount) public payable {
+    function mint(uint256 _mintAmount) public payable {
         uint256 supply = totalSupply();
 
         require(!paused);
@@ -96,25 +86,13 @@ baseURIextended;
         require(_mintAmount <= maxMintAmount);
         require(supply + _mintAmount < maxSupply, "All NFT's have been minted");
         
-        require(oneHourHasPassed(mintCooldown[_to]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
+        require(oneHourHasPassed(mintCooldown[msg.sender]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
         require(msg.value >= cost, "Not enough ETH sent; check price!");
 
-        _tokenIds.increment();
-        uint256 newTokenId = _tokenIds.current();
-        _safeMint(_to, newTokenId);
-        _setTokenURI(newTokenId, tokenURI_);
+        _safeMint(msg.sender, supply + 1);
 
         //Update timestamp and safe last updated for this address
-        mintCooldown[_to] = block.timestamp;
-    }
-
-    function eternalMint(
-        address _to,
-        string memory tokenURI_
-    ) external onlyOwner{
-        _tokenIds.increment();
-        _safeMint(_to, _tokenIds.current());
-        _setTokenURI(_tokenIds.current(), tokenURI_);  
+        mintCooldown[msg.sender] = block.timestamp;
     }
 
     function oneHourHasPassed(
@@ -124,36 +102,57 @@ baseURIextended;
     }
 
     //only owner
-  function setCost(uint256 _newCost) public onlyOwner() {
-    cost = _newCost;
-  }
+    function eternalMint() external onlyOwner{
+        _tokenIds.increment();
+        _safeMint(msg.sender, _tokenIds.current());
+    }
 
-  function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
-    maxMintAmount = _newmaxMintAmount;
-  }
+    function reveal() public onlyOwner() {
+        revealed = true;
+    } 
+  
+    function setNftPerAddressLimit(uint256 _limit) public onlyOwner() {
+        nftPerAddressLimit = _limit;
+    }
 
-  function setBaseURI(string memory _newBaseURI) public onlyOwner {
-    baseURI = _newBaseURI;
-  }
+    function setCost(uint256 _newCost) public onlyOwner() {
+        cost = _newCost;
+    }
 
-  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
-    baseExtension = _newBaseExtension;
-  }
+    function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
+        maxMintAmount = _newmaxMintAmount;
+    }
 
-  function pause(bool _state) public onlyOwner {
-    paused = _state;
-  }
+    function setBaseURI(string memory _newBaseURI) public onlyOwner {
+        baseURI = _newBaseURI;
+    }
+
+    function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+        baseExtension = _newBaseExtension;
+    }
+
+    function setNotRevealedURI(string memory _notRevealedURI) public onlyOwner {
+        notRevealedURI = _notRevealedURI;
+    }
+
+    function pause(bool _state) public onlyOwner {
+        paused = _state;
+    }
+
+    function setOnlyWhitelisted(bool _state) public onlyOwner {
+        onlyWhitelisted = _state;
+    }
+
+    function whitelistUser(address _user) public onlyOwner { //CHECK
+        whitelisted[_user] = true;
+    }
  
- function whitelistUser(address _user) public onlyOwner {
-    whitelisted[_user] = true;
-  }
- 
-  function removeWhitelistUser(address _user) public onlyOwner {
-    whitelisted[_user] = false;
-  }
+    function removeWhitelistUser(address _user) public onlyOwner {
+        whitelisted[_user] = false;
+    }
 
-  function withdraw() public payable onlyOwner {
-    (bool success, ) = payable(payments).call{value: address(this).balance}("");
-    require(success);
-  }
+    function withdraw() public payable onlyOwner {
+        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success);
+    }
 }
