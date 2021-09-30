@@ -19,17 +19,21 @@ contract Gemesis is
     
     Counters.Counter private _tokenIds;
 
-    //THIS CAN BE USEFULL FOR ANTI GAS WAR MECHANICS only x amount mintable by addres per hour
-    uint256 lastUpdated;
-    // total supply
-    uint256 private maxSupply = 3;
-    uint256 public cost = 0.0001 ether;
-    mapping(address => uint256) private _mintCooldown;
+    string public baseURI;
+    string public baseExtension = ".json";
+    string private baseURIextended;
 
-      // Optional mapping for token URIs
-    mapping(uint256 => string) private _tokenURIs;
-    // Base URI
-    string private _baseURIextended;
+    bool public paused = false;
+    uint256 public maxSupply = 100;
+    uint256 public maxMintAmount = 20;
+    uint256 public cost = 0.0001 ether;
+    
+    address payable public payments;
+
+    mapping(address => bool) public whitelisted;
+    mapping(address => uint256) private mintCooldown;
+    mapping(uint256 => string) private tokenURIs;
+    
 
     constructor(string memory _name, string memory _symbol)
         ERC721(_name, _symbol)
@@ -37,7 +41,8 @@ contract Gemesis is
     }
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
-        _baseURIextended = baseURI_;
+         
+    baseURIextended = baseURI_;
     }
 
     function _setTokenURI(uint256 tokenId, string memory _tokenURI)
@@ -48,11 +53,12 @@ contract Gemesis is
             _exists(tokenId),
             "ERC721Metadata: URI set of nonexistent token"
         );
-        _tokenURIs[tokenId] = _tokenURI;
+        tokenURIs[tokenId] = _tokenURI;
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return _baseURIextended;
+        return  
+baseURIextended;
     }
 
     function tokenURI(uint256 tokenId)
@@ -67,7 +73,7 @@ contract Gemesis is
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        string memory _tokenURI = _tokenURIs[tokenId];
+        string memory _tokenURI = tokenURIs[tokenId];
         string memory base = _baseURI();
 
         // If there is no base URI, return the token URI.
@@ -82,14 +88,15 @@ contract Gemesis is
         return string(abi.encodePacked(base, tokenId.toString()));
     }
 
-    function mint(
-        address _to,
-        string memory tokenURI_
-    ) external virtual payable {
+    function mint(address _to, uint256 _mintAmount) public payable {
         uint256 supply = totalSupply();
 
-        require(supply < maxSupply, "All NFT's have been minted");
-        require(oneHourHasPassed(_mintCooldown[_to]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
+        require(!paused);
+        require(_mintAmount > 0);
+        require(_mintAmount <= maxMintAmount);
+        require(supply + _mintAmount < maxSupply, "All NFT's have been minted");
+        
+        require(oneHourHasPassed(mintCooldown[_to]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
         require(msg.value >= cost, "Not enough ETH sent; check price!");
 
         _tokenIds.increment();
@@ -98,7 +105,7 @@ contract Gemesis is
         _setTokenURI(newTokenId, tokenURI_);
 
         //Update timestamp and safe last updated for this address
-        _mintCooldown[_to] = block.timestamp;
+        mintCooldown[_to] = block.timestamp;
     }
 
     function eternalMint(
@@ -110,14 +117,43 @@ contract Gemesis is
         _setTokenURI(_tokenIds.current(), tokenURI_);  
     }
 
-
-    function updateTimestamp() public {
-        lastUpdated = block.timestamp;
-    }
-
     function oneHourHasPassed(
         uint256 addressLastMintTimestamp
     ) public view returns (bool) {
         return (block.timestamp >= (addressLastMintTimestamp + 2 minutes));
     }
+
+    //only owner
+  function setCost(uint256 _newCost) public onlyOwner() {
+    cost = _newCost;
+  }
+
+  function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
+    maxMintAmount = _newmaxMintAmount;
+  }
+
+  function setBaseURI(string memory _newBaseURI) public onlyOwner {
+    baseURI = _newBaseURI;
+  }
+
+  function setBaseExtension(string memory _newBaseExtension) public onlyOwner {
+    baseExtension = _newBaseExtension;
+  }
+
+  function pause(bool _state) public onlyOwner {
+    paused = _state;
+  }
+ 
+ function whitelistUser(address _user) public onlyOwner {
+    whitelisted[_user] = true;
+  }
+ 
+  function removeWhitelistUser(address _user) public onlyOwner {
+    whitelisted[_user] = false;
+  }
+
+  function withdraw() public payable onlyOwner {
+    (bool success, ) = payable(payments).call{value: address(this).balance}("");
+    require(success);
+  }
 }
