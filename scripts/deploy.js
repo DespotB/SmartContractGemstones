@@ -12,6 +12,7 @@ async function main() {
    //this is deprecated instead use below const myNFT = await MyNFT.deploy();// Instance of the contract, can acces all functions of contract over this object
   // const myNFT = await MyNFT.deploy("Gemesis", "Symbol");
     // const myNFT = await MyNFT.constructor("Gemesis", "Symbol").transact({'from': deployer, 'gas': 410000})
+    
     const myNFT = await MyNFT.deploy("Gemesis", "GEM")
     console.log("Smart Contract address:", myNFT.address);
     console.log("TRX hash", myNFT.deployTransaction.hash);

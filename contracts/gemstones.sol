@@ -151,8 +151,8 @@ contract Gemesis is
         whitelisted[_user] = false;
     }
 
-    function withdraw() public payable onlyOwner {
-        (bool success, ) = payable(msg.sender).call{value: address(this).balance}("");
-        require(success);
+    function withdraw(uint _amount) public payable onlyOwner {
+        (bool success, ) = payable(msg.sender).call{value: _amount}("");
+        require(success, "Failed to send eth");
     }
 }
