@@ -30,16 +30,12 @@ contract Gemesis is
     bool public paused = false;
     bool public revealed = false;
     bool public onlyWhitelisted = true;
-    
-    address[] public whitelistedAddresses; //CHECK IF to use array or mapping
+
     mapping(address => bool) public whitelisted;
-
-
-    address payable public payments; //CHECK
-
     mapping(address => uint256) private mintCooldown;
     mapping(uint256 => string) private tokenURIs; //We will need something similiar becuase we need to read the imgs randmoly not by order
-    
+
+    address payable public payments; //CHECK
 
     constructor(
         string memory _name, 
