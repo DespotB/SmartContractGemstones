@@ -69,14 +69,14 @@ contract RandomNumberConsumer is VRFConsumerBase {
     //Test me
     function createRandomOrder(uint256 randomValue, uint256 maxNumber)
         public
-        pure
+        payable
         returns (uint256[] memory expandedValues)
     {
         for (uint256 i = 0; i < maxNumber; i++) {
             if (!_randomMintOrder[i].hasValue) {
-                randomNumber rng = data();
-                rng.value = uint256(keccak256(abi.encode(randomValue, i))).mod(maxNumber).add(1);
-                rng.hasValue = true;
+                uint256 value = uint256(keccak256(abi.encode(randomValue, i)));
+                value = value % maxNumber + 1;
+                randomNumber memory rng = randomNumber(value, true);
                 _randomMintOrder[i] = rng;
             } else {
                 i--;
