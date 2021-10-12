@@ -1,11 +1,12 @@
 //Contract based on https://docs.openzeppelin.com/contracts/3.x/erc721
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./RandomNumberGenerator.sol";
 
 
 //ALOT OF INFOS: https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-an-erc-721-nft
@@ -20,13 +21,13 @@ contract Gemesis is
     Counters.Counter private _tokenIds;
 
     string public baseURI;
-    string public baseExtension = ".json";
+    string public baseExtension = ".json"; //OR .png?
     string public notRevealedURI;
     string private baseURIextended;
-    uint256 public maxSupply = 100;
+    uint256 public maxSupply = 20;
     uint256 public maxMintAmount = 20;
     uint256 public cost = 0.0001 ether;
-    uint256 public nftPerAddressLimit = 20;  //INCREASE THIS OVER TIME?
+    uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
     bool public paused = false;
     bool public revealed = false;
     bool public onlyWhitelisted = true;
@@ -34,6 +35,7 @@ contract Gemesis is
     mapping(address => bool) public whitelisted;
     mapping(address => uint256) private mintCooldown;
     mapping(uint256 => string) private tokenURIs; //We will need something similiar becuase we need to read the imgs randmoly not by order
+    mapping(address => uint256) public addressMintedBalance;
 
     address payable public payments; //CHECK
 
@@ -43,8 +45,17 @@ contract Gemesis is
         string memory _initBaseURI,
         string memory _initNotRevealedUri
     ) ERC721(_name, _symbol) {
-        setBaseURI(_initBaseURI);
-        setNotRevealedURI(_initNotRevealedUri);
+        //setBaseURI(_initBaseURI);               //only "ipfs://"?
+        //setNotRevealedURI(_initNotRevealedUri);
+
+        //For testing 
+        setBaseURI("https://gateway.pinata.cloud/ipfs/");
+        setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmTGT8dpjYcKHaZrMoB9MuMrr6qYmzbK1uytDVzm66UC2E");
+    }
+    
+      // internal
+    function _baseURI() internal view virtual override returns (string memory) {
+        return baseURI;
     }
 
     function tokenURI(uint256 tokenId)
@@ -59,7 +70,18 @@ contract Gemesis is
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        string memory _tokenURI = tokenURIs[tokenId];
+        if(revealed == false) {
+            return notRevealedURI;
+        }
+        
+        
+         string memory currentBaseURI = _baseURI();
+        
+        return bytes(currentBaseURI).length > 0
+        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) //IS THIS OUR URI?
+        : "";
+        
+        /*string memory _tokenURI = tokenURIs[tokenId];
         string memory base = _baseURI();
 
         // If there is no base URI, return the token URI.
@@ -72,23 +94,35 @@ contract Gemesis is
         }
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
         return string(abi.encodePacked(base, tokenId.toString()));
+        */
     }
 
     function mint(uint256 _mintAmount) public payable {
+        require(!paused, "The contract is paused");
         uint256 supply = totalSupply();
-
-        require(!paused);
-        require(_mintAmount > 0);
-        require(_mintAmount <= maxMintAmount);
+        require(_mintAmount > 0, "You cannot mint less then 1 NFT's");
+        require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
         require(supply + _mintAmount < maxSupply, "All NFT's have been minted");
         
-        require(oneHourHasPassed(mintCooldown[msg.sender]), "Your Mintcooldown has not reseted yet, it will be reset at ....");
-        require(msg.value >= cost, "Not enough ETH sent; check price!");
-
-        _safeMint(msg.sender, supply + 1);
-
+        if(msg.sender != owner()) {
+            uint256 ownerMintedCount = addressMintedBalance[msg.sender];
+            require(ownerMintedCount + _mintAmount <= nftPerAddressLimit,  "max amount of NFTs per address exceeded");
+            require(msg.value >= cost * _mintAmount, "insufficient funds");
+            
+        }
+        for(uint256 i = 0; i < _mintAmount; i++){
+            _safeMint(msg.sender, supply + 1);
+            addressMintedBalance[msg.sender]++;
+        }
+        
+        
         //Update timestamp and safe last updated for this address
-        mintCooldown[msg.sender] = block.timestamp;
+        //mintCooldown[msg.sender] = block.timestamp;
+        //require(oneHourHasPassed(mintCooldown[msg.sender]), "Your Mintcooldown has not reseted yet, it will be reset at ....")
+    }
+    
+    function getBalanceOfAddress(address _address) public view returns (uint256){
+        return addressMintedBalance[_address];
     }
 
     function oneHourHasPassed(
@@ -98,8 +132,8 @@ contract Gemesis is
     }
 
     //only owner
-    function eternalMint() external onlyOwner{
-        _tokenIds.increment();
+    function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
+        _tokenIds.increment();                  
         _safeMint(msg.sender, _tokenIds.current());
     }
 

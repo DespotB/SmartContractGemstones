@@ -1,27 +1,22 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 //https://blog.chain.link/random-number-generation-solidity/
 
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";  //DEV NEEDED?=
 
 /**
  * THIS IS AN EXAMPLE CONTRACT WHICH USES HARDCODED VALUES FOR CLARITY.
  * PLEASE DO NOT USE THIS CODE IN PRODUCTION.
  */
-contract RandomNumberConsumer is VRFConsumerBase {
+contract RandomNumberGenerator is VRFConsumerBase {
     bytes32 internal _keyHash;
     uint256 internal _fee;
     uint256 public _randomResult;
     uint256 public _maxMintableTokens = 10000;
-
-    struct randomNumber {
-        uint256 value;
-        bool hasValue;
-    }
-
-    mapping(uint256 => randomNumber) _randomMintOrder;
-
+    mapping(uint256 => uint256) _randomMintOrder;
+    mapping(uint256 => bool) _randomNumberExists;
+    
     /**
      * Constructor inherits VRFConsumerBase
      * 
@@ -63,6 +58,7 @@ contract RandomNumberConsumer is VRFConsumerBase {
         internal
         override
     {
+        //requestId
         _randomResult = randomness;
     }
 
@@ -70,19 +66,28 @@ contract RandomNumberConsumer is VRFConsumerBase {
     function createRandomOrder(uint256 randomValue, uint256 maxNumber)
         public
         payable
-        returns (uint256[] memory expandedValues)
     {
-        for (uint256 i = 0; i < maxNumber; i++) {
-            if (!_randomMintOrder[i].hasValue) {
-                uint256 value = uint256(keccak256(abi.encode(randomValue, i)));
-                value = value % maxNumber + 1;
-                randomNumber memory rng = randomNumber(value, true);
-                _randomMintOrder[i] = rng;
+        uint256 localMaxNumber = maxNumber;
+        
+        for (uint256 i = 0; i < localMaxNumber; i++) {
+            uint256 value = uint256(keccak256(abi.encode(randomValue, i)));
+            value = value % maxNumber + 1;
+            if(!_randomNumberExists[value])
+            {
+                _randomNumberExists[value] = true;
+                _randomMintOrder[i] = value;
             } else {
-                i--;
+                localMaxNumber++;
             }
         }
-        return expandedValues;
+    }
+    
+    function getRandomMintOrder() 
+        internal 
+        view
+        returns (mapping(uint256 => uint256) storage) 
+    {
+        return _randomMintOrder;
     }
 
     // function withdrawLink() external {} - Implement a withdraw function to avoid locking your LINK in the contract
