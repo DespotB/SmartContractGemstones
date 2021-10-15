@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.9+commit.e5eed63a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -266,6 +266,39 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getRandomNumber",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_randomNumberGeneratorAddress",
+						"type": "address"
+					}
+				],
+				"name": "initializeRandomNumberGenerator",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "initializeRandomOrder",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -368,25 +401,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "addressLastMintTimestamp",
-						"type": "uint256"
-					}
-				],
-				"name": "oneHourHasPassed",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "onlyWhitelisted",
 				"outputs": [
@@ -463,6 +477,38 @@
 				"outputs": [
 					{
 						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "randomMintOrder",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "randomNumberGeneratorAddress",
+				"outputs": [
+					{
+						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -930,7 +976,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/Gemsesis.sol": "Gemesis"
+			"contracts/gemesis.sol": "Gemesis"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -1072,20 +1118,20 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"contracts/Gemsesis.sol": {
-			"keccak256": "0xdb41a513e4e9e1a142b56adabd0f4f78e321f7814b6c690f7a7ab3d74f9392e4",
+		"contracts/RandomNumberGenerator.sol": {
+			"keccak256": "0x652d9cd4d98f9bcaed31724d6acfeeaebf78f056597af6a320aeb0b0c7667568",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7a54131dc89b710590e7b120910709c55055d16893cb5170a7045bffacc90622",
-				"dweb:/ipfs/QmSLJEiXeyaR4EXqXDTGsFJYkzNWv3GCp7SJda7byuA4r7"
+				"bzz-raw://ff44c3cf670ee2272e72414cbc04411e551910a072c18fac0bda29333f531c4a",
+				"dweb:/ipfs/Qmd1rLCfV2H3dyS8ngZ8ehcqtuBa5imouWkA79JJp6L5Ri"
 			]
 		},
-		"contracts/RandomNumberGenerator.sol": {
-			"keccak256": "0xc980d5f248c555090dc8cef301cd08ac7a5cee22bcd0a02f621fee5d6c61eb00",
+		"contracts/gemesis.sol": {
+			"keccak256": "0xf9cf1fe4ce2fb8efe67fbba445523a5c3a51f73f0ef74c6e3cd45d073bd00465",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5ab503e212e59650009be9f3cc57e2301fcdd1ec2ac5d300c133966560150e75",
-				"dweb:/ipfs/QmZ3LU73uyfVQDHuCtfskqVdSmb4ZDuGDQfZzyVaNrjejz"
+				"bzz-raw://6b0f0982e3856481af64fb4c1ca4eca5cc202f174486c296f1aa52ea02f39012",
+				"dweb:/ipfs/QmPSCm3nQbHjSD6SjZHmaigxSy1Fc7mdcioAHJxB8ZYZNE"
 			]
 		}
 	},

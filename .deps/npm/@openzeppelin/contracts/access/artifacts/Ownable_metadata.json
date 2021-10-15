@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.9+commit.e5eed63a"
 	},
 	"language": "Solidity",
 	"output": {
@@ -85,7 +85,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"/.deps/npm/@openzeppelin/contracts/access/Ownable.sol": "Ownable"
+			".deps/npm/@openzeppelin/contracts/access/Ownable.sol": "Ownable"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -99,7 +99,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"/.deps/npm/@openzeppelin/contracts/access/Ownable.sol": {
+		".deps/npm/@openzeppelin/contracts/access/Ownable.sol": {
 			"keccak256": "0x6bb804a310218875e89d12c053e94a13a4607cdf7cc2052f3e52bd32a0dc50a1",
 			"license": "MIT",
 			"urls": [
@@ -107,7 +107,7 @@
 				"dweb:/ipfs/Qmd5c7Vxtis9wzkDNhxwc6A2QT5H9xn9kfjhx7qx44vpro"
 			]
 		},
-		"/.deps/npm/@openzeppelin/contracts/utils/Context.sol": {
+		".deps/npm/@openzeppelin/contracts/utils/Context.sol": {
 			"keccak256": "0x90565a39ae45c80f0468dc96c7b20d0afc3055f344c8203a0c9258239f350b9f",
 			"license": "MIT",
 			"urls": [

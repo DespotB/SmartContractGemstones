@@ -4,18 +4,21 @@ pragma solidity ^0.8.7;
 //https://blog.chain.link/random-number-generation-solidity/
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";  //DEV NEEDED?=
+import "@openzeppelin/contracts/access/Ownable.sol";
+
 
 /**
  * THIS IS AN EXAMPLE CONTRACT WHICH USES HARDCODED VALUES FOR CLARITY.
  * PLEASE DO NOT USE THIS CODE IN PRODUCTION.
  */
-contract RandomNumberGenerator is VRFConsumerBase {
+contract RandomNumberGenerator is VRFConsumerBase, Ownable {
     bytes32 internal _keyHash;
     uint256 internal _fee;
     uint256 public _randomResult;
     uint256 public _maxMintableTokens = 10000;
-    mapping(uint256 => uint256) _randomMintOrder;
-    mapping(uint256 => bool) _randomNumberExists;
+    bytes32 internal _requestId;
+    mapping(uint256 => uint256) public _randomMintOrder; //CHANGE THIS BACK TO Internal
+    mapping(uint256 => bool) internal _randomNumberExists;
     
     /**
      * Constructor inherits VRFConsumerBase
@@ -43,12 +46,22 @@ contract RandomNumberGenerator is VRFConsumerBase {
     /**
      * Requests randomness
      */
-    function getRandomNumber() public returns (bytes32 requestId) {
+    function requestRandomNumber() internal returns (bytes32 requestId) {
         require(
             LINK.balanceOf(address(this)) >= _fee,
             "Not enough LINK - fill contract with faucet"
         );
+        _randomResult = 0;
         return requestRandomness(_keyHash, _fee);
+    }
+    
+    function getRandomNumber() external {
+        _requestId = requestRandomNumber();
+    }
+    
+    
+    function getLinkbalance() public view returns (uint256) {
+        return LINK.balanceOf(address(this));
     }
 
     /**
@@ -58,37 +71,18 @@ contract RandomNumberGenerator is VRFConsumerBase {
         internal
         override
     {
-        //requestId
+        require(_requestId == requestId, "RequestId doesnt fit");
         _randomResult = randomness;
     }
-
-    //Test me
-    function createRandomOrder(uint256 randomValue, uint256 maxNumber)
-        public
-        payable
-    {
-        uint256 localMaxNumber = maxNumber;
-        
-        for (uint256 i = 0; i < localMaxNumber; i++) {
-            uint256 value = uint256(keccak256(abi.encode(randomValue, i)));
-            value = value % maxNumber + 1;
-            if(!_randomNumberExists[value])
-            {
-                _randomNumberExists[value] = true;
-                _randomMintOrder[i] = value;
-            } else {
-                localMaxNumber++;
-            }
-        }
-    }
     
-    function getRandomMintOrder() 
-        internal 
+       function getRandomResult() 
+        public
         view
-        returns (mapping(uint256 => uint256) storage) 
+        returns (uint256) 
     {
-        return _randomMintOrder;
+        return _randomResult;
     }
+
 
     // function withdrawLink() external {} - Implement a withdraw function to avoid locking your LINK in the contract
 }

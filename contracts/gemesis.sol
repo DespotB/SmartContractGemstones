@@ -18,7 +18,15 @@ contract Gemesis is
     using Counters for Counters.Counter;
     using Strings for uint256;
     
+    //FOR VRF
+    RandomNumberGenerator randomNumberGenerator;
+    address public randomNumberGeneratorAddress;
+    mapping(uint256 => uint256) public randomMintOrder;     //CHANGE THIS BACK FROM PUBLIC
+    mapping(uint256 => bool) internal randomNumberExists;
+    
+    
     Counters.Counter private _tokenIds;
+    
 
     string public baseURI;
     string public baseExtension = ".json"; //OR .png?
@@ -37,6 +45,7 @@ contract Gemesis is
     mapping(uint256 => string) private tokenURIs; //We will need something similiar becuase we need to read the imgs randmoly not by order
     mapping(address => uint256) public addressMintedBalance;
 
+    
     address payable public payments; //CHECK
 
     constructor(
@@ -48,9 +57,48 @@ contract Gemesis is
         //setBaseURI(_initBaseURI);               //only "ipfs://"?
         //setNotRevealedURI(_initNotRevealedUri);
 
-        //For testing 
+        //For testing
         setBaseURI("https://gateway.pinata.cloud/ipfs/");
         setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmTGT8dpjYcKHaZrMoB9MuMrr6qYmzbK1uytDVzm66UC2E");
+    }
+    
+    //VRF functions
+    // call this function after transaction LINK on random contract
+     function initializeRandomNumberGenerator (address _randomNumberGeneratorAddress)public onlyOwner {
+        randomNumberGenerator = RandomNumberGenerator(_randomNumberGeneratorAddress);
+        randomNumberGeneratorAddress = _randomNumberGeneratorAddress;
+        randomNumberGenerator.getRandomNumber();
+    }
+    
+    //call this function after random result was callbacked
+    function getRandomNumber() public view onlyOwner returns (uint256){
+        return randomNumberGenerator.getRandomResult();
+    }
+    
+    function initializeRandomOrder() public onlyOwner {
+        createRandomOrder(randomNumberGenerator.getRandomResult(), maxSupply);
+    }
+
+    //TEST ME
+    function createRandomOrder(uint256 _randomNumber, uint256 _maxNumber)
+        internal
+    {
+        require(_randomNumber != 0, "RandomResult hasnt arrived yet or is 0.");
+        uint256 localMaxNumber = _maxNumber;
+        uint256 counterNumber = 0;
+        
+        for (uint256 i = 0; i < localMaxNumber; i++) {
+            uint256 value = uint256(keccak256(abi.encode(_randomNumber, i)));
+            value = value % _maxNumber + 1;
+            if(!randomNumberExists[value])
+            {
+                randomNumberExists[value] = true;
+                randomMintOrder[i - counterNumber] = value;
+            } else {
+                counterNumber++;
+                localMaxNumber++;
+            }
+        }
     }
     
       // internal
@@ -111,8 +159,9 @@ contract Gemesis is
             
         }
         for(uint256 i = 0; i < _mintAmount; i++){
-            _safeMint(msg.sender, supply + 1);
+            _safeMint(msg.sender, supply + 1);      //put here randomMintOrder[supply+1];
             addressMintedBalance[msg.sender]++;
+            supply = totalSupply();
         }
         
         
@@ -125,11 +174,11 @@ contract Gemesis is
         return addressMintedBalance[_address];
     }
 
-    function oneHourHasPassed(
-        uint256 addressLastMintTimestamp
-    ) public view returns (bool) {
-        return (block.timestamp >= (addressLastMintTimestamp + 2 minutes));
-    }
+    //function oneHourHasPassed(
+    //    uint256 addressLastMintTimestamp
+    //) public view returns (bool) {
+    //    return (block.timestamp >= (addressLastMintTimestamp + 2 minutes));
+    //}
 
     //only owner
     function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
