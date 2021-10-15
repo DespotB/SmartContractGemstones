@@ -221,13 +221,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "energyStonesSpecialMint",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -296,6 +289,13 @@
 				"name": "initializeRandomOrder",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "invest",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -538,13 +538,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "reveal",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "revealed",
 				"outputs": [
 					{
@@ -699,6 +692,19 @@
 					}
 				],
 				"name": "setOnlyWhitelisted",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "_state",
+						"type": "bool"
+					}
+				],
+				"name": "setReveal",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1119,19 +1125,19 @@
 			]
 		},
 		"contracts/RandomNumberGenerator.sol": {
-			"keccak256": "0x652d9cd4d98f9bcaed31724d6acfeeaebf78f056597af6a320aeb0b0c7667568",
+			"keccak256": "0x848129ada5e215442ba3a66d78551c83c43447024b366e2ba7a1e376e5f078bd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff44c3cf670ee2272e72414cbc04411e551910a072c18fac0bda29333f531c4a",
-				"dweb:/ipfs/Qmd1rLCfV2H3dyS8ngZ8ehcqtuBa5imouWkA79JJp6L5Ri"
+				"bzz-raw://03eb5c0369090fe2c1ff0a9e2c76ddaf38122d6cbd940eca0ed2129e8f4656ff",
+				"dweb:/ipfs/QmU4TugHd9Km3aEFJrVWp67yMksDn9HibpEc2ymEsbqzr1"
 			]
 		},
 		"contracts/gemesis.sol": {
-			"keccak256": "0xf9cf1fe4ce2fb8efe67fbba445523a5c3a51f73f0ef74c6e3cd45d073bd00465",
+			"keccak256": "0xfdda6cb8a17c66698e8f87296622f3cfe6d3b0309fa4eec1a2667265f82c79e6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6b0f0982e3856481af64fb4c1ca4eca5cc202f174486c296f1aa52ea02f39012",
-				"dweb:/ipfs/QmPSCm3nQbHjSD6SjZHmaigxSy1Fc7mdcioAHJxB8ZYZNE"
+				"bzz-raw://e74e0498bc000be289abe0575d8dc2d425bbb3a704fa672a299cb1b88e8040e9",
+				"dweb:/ipfs/QmRqayoEyBS8GfKYY2V4myVxNSfUCFjBsLLvro3ZNSKS9j"
 			]
 		}
 	},
