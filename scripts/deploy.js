@@ -19,6 +19,17 @@ async function main() {
     await myNFT.deployed();
  }
  
+ //THIS WILL BE NEEDED TO GIVE the instance of RandomNumberGenerator to Gemesiscontract (its contract address)
+ 
+//var RandomNumberGenerator = artifacts.require("./RandomNumberGenerator.sol");
+//var Gemesis = artifacts.require("./Gemesis.sol");
+//module.exports = function(deployer) {
+//    deployer.deploy(RandomNumberGenerator).then(function() {
+//        return deployer.deploy(Gemesis, RandomNumberGenerator.address);
+//    }).then(function() { })
+//};
+ 
+ 
 main()
   .then(() => process.exit(0))
   .catch(error => {
