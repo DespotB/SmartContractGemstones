@@ -15,23 +15,18 @@ contract Gemesis is
     ERC721Enumerable,
     Ownable //remove ownable to make it mintable for others
 {
-    using Counters for Counters.Counter;
     using Strings for uint256;
     
-    //FOR VRF
+    //For VRF
     RandomNumberGenerator randomNumberGenerator;
     address public randomNumberGeneratorAddress;
     mapping(uint256 => uint256) public randomMintOrder;     //CHANGE THIS BACK FROM PUBLIC
     mapping(uint256 => bool) internal randomNumberExists;
-    
-    
-    Counters.Counter private _tokenIds;
-    
 
+    //For Gemesis
     string public baseURI;
     string public baseExtension = ".json"; //OR .png?
     string public notRevealedURI;
-    string private baseURIextended;
     uint256 public maxSupply = 20;
     uint256 public maxMintAmount = 20;
     uint256 public cost = 0.0001 ether;
@@ -58,8 +53,8 @@ contract Gemesis is
         //setNotRevealedURI(_initNotRevealedUri);
 
         //For testing
-        setBaseURI("https://gateway.pinata.cloud/ipfs/");
-        setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmTGT8dpjYcKHaZrMoB9MuMrr6qYmzbK1uytDVzm66UC2E");
+        setBaseURI("https://gateway.pinata.cloud/ipfs/QmNwbePLwNHfkTfj28yibDcpgw21gtAtjXLgr1FUf6fJ4q/");
+        setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
     }
     
     //VRF functions
@@ -122,39 +117,23 @@ contract Gemesis is
             return notRevealedURI;
         }
         
-        
-         string memory currentBaseURI = _baseURI();
-        
+        string memory currentBaseURI = _baseURI();
         return bytes(currentBaseURI).length > 0
-        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) //IS THIS OUR URI?
+        //? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) 
+        ? string(abi.encodePacked(currentBaseURI, randomMintOrder[tokenId].toString(), baseExtension)) //TEST THIS ONLY WITH tokenId.string
         : "";
-        
-        /*string memory _tokenURI = tokenURIs[tokenId];
-        string memory base = _baseURI();
-
-        // If there is no base URI, return the token URI.
-        if (bytes(base).length == 0) {
-            return _tokenURI;
-        }
-        // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-        if (bytes(_tokenURI).length > 0) {
-            return string(abi.encodePacked(base, _tokenURI));
-        }
-        // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-        return string(abi.encodePacked(base, tokenId.toString()));
-        */
     }
 
     function mint(uint256 _mintAmount) public payable {
         require(!paused, "The contract is paused");
         uint256 supply = totalSupply();
         require(_mintAmount > 0, "You cannot mint less then 1 NFT's");
-        require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
-        require(supply + _mintAmount < maxSupply, "All NFT's have been minted");
+        require(supply + _mintAmount < maxSupply + 1, "All NFT's have been minted");
         
         if(msg.sender != owner()) {
             uint256 ownerMintedCount = addressMintedBalance[msg.sender];
             require(ownerMintedCount + _mintAmount <= nftPerAddressLimit,  "max amount of NFTs per address exceeded");
+            require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
             require(msg.value >= cost * _mintAmount, "insufficient funds");
             
         }
@@ -181,13 +160,13 @@ contract Gemesis is
     //}
 
     //only owner
-    function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
-        _tokenIds.increment();                  
-        _safeMint(msg.sender, _tokenIds.current());
-    }
+    //function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
+    //    uint256 supply = totalSupply();                  
+    //    _safeMint(msg.sender, supply + 1);
+    //}
 
-    function reveal() public onlyOwner() {
-        revealed = true;
+    function setReveal(bool _state) public onlyOwner() {
+        revealed = _state;
     } 
   
     function setNftPerAddressLimit(uint256 _limit) public onlyOwner() {
@@ -229,8 +208,12 @@ contract Gemesis is
     function removeWhitelistUser(address _user) public onlyOwner {
         whitelisted[_user] = false;
     }
+    
+    function invest() external payable {
+    
+    }
 
-    function withdraw(uint _amount) public payable onlyOwner {
+    function withdraw(uint _amount) public payable onlyOwner { //TEST ME
         (bool success, ) = payable(msg.sender).call{value: _amount}("");
         require(success, "Failed to send eth");
     }

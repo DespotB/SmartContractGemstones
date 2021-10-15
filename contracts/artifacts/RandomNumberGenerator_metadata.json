@@ -31,51 +31,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "_maxMintableTokens",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "_randomMintOrder",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "_randomResult",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "getLinkbalance",
 				"outputs": [
 					{
@@ -115,6 +70,19 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "randomResult",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -178,7 +146,7 @@
 			"kind": "user",
 			"methods": {
 				"constructor": {
-					"notice": "Constructor inherits VRFConsumerBase  Network: Kovan Chainlink VRF Coordinator address: 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9 LINK token address:                0xa36085F69e2889c224210F603D836748e7dC0088 Key Hash: 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4 Network: Ethereum Chainlink VRF Coordinator address: 0xf0d54349aDdcf704F77AE15b96510dEA15cb7952 LINK token address:                0x514910771AF9Ca656af840dff83E8264EcF986CA Key Hash: 0xAA77729D3466CA35AE8D28B3BBAC7CC36A5031EFDC430821C02BC31A238AF445"
+					"notice": "Constructor inherits VRFConsumerBase  Network: Kovan Chainlink VRF Coordinator address: 0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9 LINK token address:                0xa36085F69e2889c224210F603D836748e7dC0088 Key Hash: 0x6c3699283bda56ad74f6b855546325b68d482e983852a7a82979cc4807b641f4 fee:     0.1 LINK  Network: Rinkeby Chainlink VRF Coordinator address: 0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B LINK token address:                0x01BE23585060835E02B77ef475b0Cc51aA1e0709 Key Hash: 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311 fee:     0.1 LINK Network: Ethereum Chainlink VRF Coordinator address: 0xf0d54349aDdcf704F77AE15b96510dEA15cb7952 LINK token address:                0x514910771AF9Ca656af840dff83E8264EcF986CA Key Hash: 0xAA77729D3466CA35AE8D28B3BBAC7CC36A5031EFDC430821C02BC31A238AF445 fee:     2 LINK"
 				}
 			},
 			"notice": "THIS IS AN EXAMPLE CONTRACT WHICH USES HARDCODED VALUES FOR CLARITY. PLEASE DO NOT USE THIS CODE IN PRODUCTION.",
@@ -242,11 +210,11 @@
 			]
 		},
 		"contracts/RandomNumberGenerator.sol": {
-			"keccak256": "0x652d9cd4d98f9bcaed31724d6acfeeaebf78f056597af6a320aeb0b0c7667568",
+			"keccak256": "0x1abf755d1e29d49f4edce2213a224f7b8fd82d6c45b8333b70fffcf54e497b39",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff44c3cf670ee2272e72414cbc04411e551910a072c18fac0bda29333f531c4a",
-				"dweb:/ipfs/Qmd1rLCfV2H3dyS8ngZ8ehcqtuBa5imouWkA79JJp6L5Ri"
+				"bzz-raw://e70db0e303b82d704ce6581d82b2ef95f56f1e3caf81e6254edffb4bd6cabed1",
+				"dweb:/ipfs/QmPRooqkD37uvkCByDJJcuHMXWtA7ka4WnVzdqSjZ4CHyK"
 			]
 		}
 	},
