@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./RandomNumberGenerator.sol";
 
 
-//ALOT OF INFOS: https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-an-erc-721-nft
+//some OF INFOS: https://www.quicknode.com/guides/solidity/how-to-create-and-deploy-an-erc-721-nft
 contract Gemesis is
     // ERC721,  
     ERC721Enumerable,
@@ -27,10 +27,10 @@ contract Gemesis is
     string public baseURI;
     string public baseExtension = ".json"; //OR .png?
     string public notRevealedURI;
-    uint256 public maxSupply = 20;
-    uint256 public maxMintAmount = 20;
-    uint256 public cost = 0.0001 ether;
-    uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
+    uint256 public maxSupply = 8;
+    uint256 public maxMintAmount = 2;
+    uint256 public cost = 0.00001 ether;
+    //uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
     bool public paused = false;
     bool public revealed = false;
     bool public onlyWhitelisted = true;
@@ -53,13 +53,13 @@ contract Gemesis is
         //setNotRevealedURI(_initNotRevealedUri);
 
         //For testing
-        setBaseURI("https://gateway.pinata.cloud/ipfs/QmNwbePLwNHfkTfj28yibDcpgw21gtAtjXLgr1FUf6fJ4q/");
+        setBaseURI("https://gateway.pinata.cloud/ipfs/QmVzuDSk1JzeWBiq5xBn6QLdkuGRsadw45a27bqALKKynU/");
         setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
     }
     
     //VRF functions
     // call this function after transaction LINK on random contract
-     function initializeRandomNumberGenerator (address _randomNumberGeneratorAddress)public onlyOwner {
+    function initializeRandomNumberGenerator (address _randomNumberGeneratorAddress)public onlyOwner {
         randomNumberGenerator = RandomNumberGenerator(_randomNumberGeneratorAddress);
         randomNumberGeneratorAddress = _randomNumberGeneratorAddress;
         randomNumberGenerator.getRandomNumber();
@@ -131,8 +131,8 @@ contract Gemesis is
         require(supply + _mintAmount < maxSupply + 1, "All NFT's have been minted");
         
         if(msg.sender != owner()) {
-            uint256 ownerMintedCount = addressMintedBalance[msg.sender];
-            require(ownerMintedCount + _mintAmount <= nftPerAddressLimit,  "max amount of NFTs per address exceeded");
+            //uint256 ownerMintedCount = addressMintedBalance[msg.sender];
+            //require(ownerMintedCount + _mintAmount <= nftPerAddressLimit,  "max amount of NFTs per address exceeded");
             require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
             require(msg.value >= cost * _mintAmount, "insufficient funds");
             
@@ -143,23 +143,14 @@ contract Gemesis is
             supply = totalSupply();
         }
         
-        
-        //Update timestamp and safe last updated for this address
-        //mintCooldown[msg.sender] = block.timestamp;
-        //require(oneHourHasPassed(mintCooldown[msg.sender]), "Your Mintcooldown has not reseted yet, it will be reset at ....")
     }
     
     function getBalanceOfAddress(address _address) public view returns (uint256){
         return addressMintedBalance[_address];
     }
 
-    //function oneHourHasPassed(
-    //    uint256 addressLastMintTimestamp
-    //) public view returns (bool) {
-    //    return (block.timestamp >= (addressLastMintTimestamp + 2 minutes));
-    //}
-
     //only owner
+    
     //function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
     //    uint256 supply = totalSupply();                  
     //    _safeMint(msg.sender, supply + 1);
@@ -169,9 +160,9 @@ contract Gemesis is
         revealed = _state;
     } 
   
-    function setNftPerAddressLimit(uint256 _limit) public onlyOwner() {
-        nftPerAddressLimit = _limit;
-    }
+    //function setNftPerAddressLimit(uint256 _limit) public onlyOwner() {
+    //    nftPerAddressLimit = _limit;
+    //}
 
     function setCost(uint256 _newCost) public onlyOwner() {
         cost = _newCost;

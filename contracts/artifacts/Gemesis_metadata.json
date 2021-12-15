@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.9+commit.e5eed63a"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -376,19 +376,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "nftPerAddressLimit",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "notRevealedURI",
 				"outputs": [
 					{
@@ -653,19 +640,6 @@
 					}
 				],
 				"name": "setCost",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_limit",
-						"type": "uint256"
-					}
-				],
-				"name": "setNftPerAddressLimit",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -1125,19 +1099,19 @@
 			]
 		},
 		"contracts/RandomNumberGenerator.sol": {
-			"keccak256": "0x848129ada5e215442ba3a66d78551c83c43447024b366e2ba7a1e376e5f078bd",
+			"keccak256": "0xf73f768cf9d4dd4bdb3ffa65a33d75e82f0db2019e6a4ba978a9e7f69e7a175b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://03eb5c0369090fe2c1ff0a9e2c76ddaf38122d6cbd940eca0ed2129e8f4656ff",
-				"dweb:/ipfs/QmU4TugHd9Km3aEFJrVWp67yMksDn9HibpEc2ymEsbqzr1"
+				"bzz-raw://0b06ab60695ba52833c3190404d7e410a510d0c5f3b94158747f97f2533ec979",
+				"dweb:/ipfs/QmTkS4fJAaKJ9jy3LAmcSBezSxng3jYkYNrgtDWtKNCQ1p"
 			]
 		},
 		"contracts/gemesis.sol": {
-			"keccak256": "0xfdda6cb8a17c66698e8f87296622f3cfe6d3b0309fa4eec1a2667265f82c79e6",
+			"keccak256": "0x65d0a3403f5eae802aa29e1d41fd54424a61f4e7ea518c6f5953e406c45292f7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e74e0498bc000be289abe0575d8dc2d425bbb3a704fa672a299cb1b88e8040e9",
-				"dweb:/ipfs/QmRqayoEyBS8GfKYY2V4myVxNSfUCFjBsLLvro3ZNSKS9j"
+				"bzz-raw://4420781eca0fe2f5f745b60ca96775b97cbd99512703f65aaad53759a2410cf7",
+				"dweb:/ipfs/QmNsbtyi713os15w2hc3WLC22HYTt6NcMMxSWCZ8ceSnCE"
 			]
 		}
 	},

@@ -7,10 +7,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";  //DEV NEEDED?=
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-/**
- * THIS IS AN EXAMPLE CONTRACT WHICH USES HARDCODED VALUES FOR CLARITY.
- * PLEASE DO NOT USE THIS CODE IN PRODUCTION.
- */
+
 contract RandomNumberGenerator is VRFConsumerBase, Ownable{
     bytes32 internal keyHash;
     uint256 internal fee;
@@ -78,5 +75,5 @@ contract RandomNumberGenerator is VRFConsumerBase, Ownable{
         return randomResult;
     }
     
-    //ADD Withdraw for link if necessary.
+    //ADD Withdraw for link.
 }
