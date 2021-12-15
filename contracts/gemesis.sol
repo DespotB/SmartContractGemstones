@@ -27,8 +27,8 @@ contract Gemesis is
     string public baseURI;
     string public baseExtension = ".json"; //OR .png?
     string public notRevealedURI;
-    uint256 public maxSupply = 8;
-    uint256 public maxMintAmount = 2;
+    uint256 public maxSupply = 9669;
+    uint256 public maxMintAmount = 20;
     uint256 public cost = 0.00001 ether;
     //uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
     bool public paused = false;
@@ -37,10 +37,15 @@ contract Gemesis is
 
     mapping(address => bool) public whitelisted;
     mapping(address => uint256) private mintCooldown;
-    mapping(uint256 => string) private tokenURIs; //We will need something similiar becuase we need to read the imgs randmoly not by order
+    mapping(uint256 => string) private tokenURIs; 
     mapping(address => uint256) public addressMintedBalance;
-
     
+    //BAYC COntract adress: 0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d
+    //MAYC COntract adress: 0x60e4d786628fea6478f785a6d7e704777c86a7c6
+    //Cool Cats Contract address: 0x1a92f7381b9f03921564a437210bb9396471050c
+    //Pedgy Penguins Contract address: 0xbd3531da5cf5857e7cfaa92426877b022e612cf8
+    //TestGemesis Contract Rinkeby: 
+
     address payable public payments; //CHECK
 
     constructor(
@@ -149,20 +154,9 @@ contract Gemesis is
         return addressMintedBalance[_address];
     }
 
-    //only owner
-    
-    //function energyStonesSpecialMint() external onlyOwner{              //CHECK THIS
-    //    uint256 supply = totalSupply();                  
-    //    _safeMint(msg.sender, supply + 1);
-    //}
-
     function setReveal(bool _state) public onlyOwner() {
         revealed = _state;
     } 
-  
-    //function setNftPerAddressLimit(uint256 _limit) public onlyOwner() {
-    //    nftPerAddressLimit = _limit;
-    //}
 
     function setCost(uint256 _newCost) public onlyOwner() {
         cost = _newCost;
@@ -198,10 +192,6 @@ contract Gemesis is
  
     function removeWhitelistUser(address _user) public onlyOwner {
         whitelisted[_user] = false;
-    }
-    
-    function invest() external payable {
-    
     }
 
     function withdraw(uint _amount) public payable onlyOwner { //TEST ME

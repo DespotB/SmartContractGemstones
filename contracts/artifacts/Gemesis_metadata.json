@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.10+commit.fc410830"
 	},
 	"language": "Solidity",
 	"output": {
@@ -289,13 +289,6 @@
 				"name": "initializeRandomOrder",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "invest",
-				"outputs": [],
-				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -1107,11 +1100,11 @@
 			]
 		},
 		"contracts/gemesis.sol": {
-			"keccak256": "0x65d0a3403f5eae802aa29e1d41fd54424a61f4e7ea518c6f5953e406c45292f7",
+			"keccak256": "0x4d4f0645598256857d6a0283d179ebf083b371a64826b9420946738133886594",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4420781eca0fe2f5f745b60ca96775b97cbd99512703f65aaad53759a2410cf7",
-				"dweb:/ipfs/QmNsbtyi713os15w2hc3WLC22HYTt6NcMMxSWCZ8ceSnCE"
+				"bzz-raw://c6634474bf9e29d113657e602a1b11504bd6526cd60e19851dd2066e84c3cc70",
+				"dweb:/ipfs/QmfTTqjhgBncorV9K69moxQHaZGyjfD3ha6q3PVN5Gj2qn"
 			]
 		}
 	},
