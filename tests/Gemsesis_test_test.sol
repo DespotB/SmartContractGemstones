@@ -14,6 +14,8 @@ import "../contracts/gemesis.sol";
 // File name has to end with '_test.sol', this file can contain more than one testSuite contracts
 contract testSuite {
 
+    Gemesis gemesis;
+
     /// 'beforeAll' runs before all other tests
     /// More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'
     function beforeAll() public {
@@ -26,6 +28,8 @@ contract testSuite {
         Assert.ok(2 == 2, 'should be true');
         Assert.greaterThan(uint(2), uint(1), "2 should be greater than to 1");
         Assert.lesserThan(uint(2), uint(3), "2 should be lesser than to 3");
+        gemesis = new Gemesis("Gemesis", "gem", "", "");
+        gemesis.getRandomNumber();
     }
 
     function checkSuccess2() public pure returns (bool) {

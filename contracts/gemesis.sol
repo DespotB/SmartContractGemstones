@@ -20,7 +20,7 @@ contract Gemesis is
     //For VRF
     RandomNumberGenerator randomNumberGenerator;
     address public randomNumberGeneratorAddress;
-    mapping(uint256 => uint256) public randomMintOrder;     //CHANGE THIS BACK FROM PUBLIC
+    mapping(uint256 => uint256) public randomMintOrder;    //CHECK IF NOW WORKS
     mapping(uint256 => bool) internal randomNumberExists;
 
     //For Gemesis
@@ -28,6 +28,7 @@ contract Gemesis is
     string public baseExtension = ".json"; //OR .png?
     string public notRevealedURI;
     uint256 public maxSupply = 9669;
+    uint256 public currentMintSupply = 0;
     uint256 public maxMintAmount = 20;
     uint256 public cost = 0.00001 ether;
     //uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
@@ -52,13 +53,15 @@ contract Gemesis is
         string memory _name, 
         string memory _symbol,
         string memory _initBaseURI,
-        string memory _initNotRevealedUri
+        string memory _initNotRevealedUri,
+        uint256 _currentMintSupply
     ) ERC721(_name, _symbol) {
         //setBaseURI(_initBaseURI);               //only "ipfs://"?
         //setNotRevealedURI(_initNotRevealedUri);
 
         //For testing
-        setBaseURI("https://gateway.pinata.cloud/ipfs/QmVzuDSk1JzeWBiq5xBn6QLdkuGRsadw45a27bqALKKynU/");
+        setCurrentMintSupply(_currentMintSupply);
+        setBaseURI("ipfs://Qmd6dZtxs41qtyFyxaW5rG5MYQFYeESs7rpC5XwhNwqAzy/");
         setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
     }
     
@@ -133,17 +136,16 @@ contract Gemesis is
         require(!paused, "The contract is paused");
         uint256 supply = totalSupply();
         require(_mintAmount > 0, "You cannot mint less then 1 NFT's");
-        require(supply + _mintAmount < maxSupply + 1, "All NFT's have been minted");
+        require(supply + _mintAmount <= currentMintSupply, "The amount of Gemesis you are trying to mint is not available in this mint cycle.");
+        require(supply + _mintAmount <= maxSupply, "The amount of Gemesis you are trying to mint is not available");
         
         if(msg.sender != owner()) {
-            //uint256 ownerMintedCount = addressMintedBalance[msg.sender];
-            //require(ownerMintedCount + _mintAmount <= nftPerAddressLimit,  "max amount of NFTs per address exceeded");
             require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
             require(msg.value >= cost * _mintAmount, "insufficient funds");
             
         }
         for(uint256 i = 0; i < _mintAmount; i++){
-            _safeMint(msg.sender, supply + 1);      //put here randomMintOrder[supply+1];
+            _safeMint(msg.sender, randomMintOrder[supply + 1]);
             addressMintedBalance[msg.sender]++;
             supply = totalSupply();
         }
@@ -164,6 +166,10 @@ contract Gemesis is
 
     function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner() {
         maxMintAmount = _newmaxMintAmount;
+    } 
+
+    function setCurrentMintSupply(uint256 _newCurrentMintSupply) public onlyOwner() {
+        currentMintSupply = _newCurrentMintSupply;
     }
 
     function setBaseURI(string memory _newBaseURI) public onlyOwner {
@@ -182,7 +188,7 @@ contract Gemesis is
         paused = _state;
     }
 
-    function setOnlyWhitelisted(bool _state) public onlyOwner {
+    function setOnlyWhitelisted(bool  _state) public onlyOwner {
         onlyWhitelisted = _state;
     }
 
