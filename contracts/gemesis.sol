@@ -21,7 +21,7 @@ contract Gemesis is
     RandomNumberGenerator randomNumberGenerator;
     address public randomNumberGeneratorAddress;
     mapping(uint256 => uint256) public randomMintOrder;    //CHECK IF NOW WORKS
-    mapping(uint256 => bool) internal randomNumberExists;
+    mapping(uint256 => bool) public randomNumberExists;
 
     //For Gemesis
     string public baseURI;
@@ -31,13 +31,12 @@ contract Gemesis is
     uint256 public currentMintSupply = 0;
     uint256 public maxMintAmount = 20;
     uint256 public cost = 0.00001 ether;
-    //uint256 public nftPerAddressLimit = 10;  //INCREASE THIS OVER TIME?
     bool public paused = false;
     bool public revealed = false;
     bool public onlyWhitelisted = true;
 
+    uint256[9668] randomMintOrderArray;
     mapping(address => bool) public whitelisted;
-    mapping(address => uint256) private mintCooldown;
     mapping(uint256 => string) private tokenURIs; 
     mapping(address => uint256) public addressMintedBalance;
     
@@ -84,7 +83,7 @@ contract Gemesis is
 
     //TEST ME
     function createRandomOrder(uint256 _randomNumber, uint256 _maxNumber)
-        internal
+        public
     {
         require(_randomNumber != 0, "RandomResult hasnt arrived yet or is 0.");
         uint256 localMaxNumber = _maxNumber;
@@ -101,6 +100,25 @@ contract Gemesis is
                 counterNumber++;
                 localMaxNumber++;
             }
+        }
+    }
+
+    function ArrCreateRandomOrder(uint256 _randomNumber, uint256 _maxNumber)
+        public
+    {
+        require(_randomNumber != 0, "RandomResult hasnt arrived yet or is 0.");
+
+        for (uint256 i = 0; i < randomMintOrderArray.length; i++) {
+            randomMintOrderArray[i] = i;
+        }
+
+        for (uint256 i = randomMintOrderArray.length - 1; i >= 0; i--) {
+            uint256 value = uint256(keccak256(abi.encode(_randomNumber, i)));
+            value = value % randomMintOrderArray.length;
+
+            uint256 temp = randomMintOrderArray[value];
+            randomMintOrderArray[value] = randomMintOrderArray[i];
+            randomMintOrderArray[i] = temp;
         }
     }
     
@@ -127,8 +145,8 @@ contract Gemesis is
         
         string memory currentBaseURI = _baseURI();
         return bytes(currentBaseURI).length > 0
-        //? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) 
-        ? string(abi.encodePacked(currentBaseURI, randomMintOrder[tokenId].toString(), baseExtension)) //TEST THIS ONLY WITH tokenId.string
+        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension)) 
+        //? string(abi.encodePacked(currentBaseURI, randomMintOrder[tokenId].toString(), baseExtension)) //TEST THIS ONLY WITH tokenId.string
         : "";
     }
 
