@@ -4,7 +4,6 @@ pragma solidity >=0.4.22 <0.9.0;
 
 // This import is automatically injected by Remix
 import "remix_tests.sol"; 
-
 // This import is required to use custom transaction context
 // Although it may fail compilation in 'Solidity Compiler' plugin
 // But it will work fine in 'Solidity Unit Testing' plugin
@@ -28,7 +27,7 @@ contract testSuite {
         Assert.ok(2 == 2, 'should be true');
         Assert.greaterThan(uint(2), uint(1), "2 should be greater than to 1");
         Assert.lesserThan(uint(2), uint(3), "2 should be lesser than to 3");
-        gemesis = new Gemesis("Gemesis", "gem", "", "");
+        gemesis = new Gemesis("Gemesis", "gem", "", "",200);
         gemesis.getRandomNumber();
     }
 
@@ -37,6 +36,12 @@ contract testSuite {
         return true;
     }
     
+
+    function checkRandomFunction() public pure returns (bool) {
+        // Use the return value (true or false) to test the contract
+        return true;
+    }
+
     function checkFailure() public {
         Assert.notEqual(uint(1), uint(1), "1 should not be equal to 1");
     }

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.10+commit.fc410830"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -17,6 +17,19 @@
 				"name": "checkFailure",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "checkRandomFunction",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -218,11 +231,11 @@
 			]
 		},
 		"contracts/gemesis.sol": {
-			"keccak256": "0x4d4f0645598256857d6a0283d179ebf083b371a64826b9420946738133886594",
+			"keccak256": "0x134f9f0757c667d62768d3a62e82e1aed3aed335c0969bc67c2612e5795b776a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c6634474bf9e29d113657e602a1b11504bd6526cd60e19851dd2066e84c3cc70",
-				"dweb:/ipfs/QmfTTqjhgBncorV9K69moxQHaZGyjfD3ha6q3PVN5Gj2qn"
+				"bzz-raw://0a2d5b77ed1387c0b04c30671f64b567d456d1ca720262acd412eb41519d8034",
+				"dweb:/ipfs/QmXnVX25BvPqUCMWPFRRefQQJn7wYaRusCq5az6xRCUH7j"
 			]
 		},
 		"remix_accounts.sol": {
@@ -242,11 +255,11 @@
 			]
 		},
 		"tests/Gemsesis_test_test.sol": {
-			"keccak256": "0x09a409d045fecf4ec5686a65c474e35827c51b8bb87ad0b534aa1c7b1a6812cb",
+			"keccak256": "0xe2776286d857d1937ad5f06950dc1882dbde4c278c0b340f8e7e90ad088d1a0b",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://c911cd8e796e03bc84ac170c6a41f57a02adc32a82e8d2ba98fbbf9f376404e4",
-				"dweb:/ipfs/QmfNV2sAGNeY2WQXaJi4E2TSB5PnVF6s5atKjZpHxu1p48"
+				"bzz-raw://39ae9cc68d14eb877c0933e4e7dfa580def4de0e6a396ab018fbc32b567e35a9",
+				"dweb:/ipfs/QmZYyzRMWFjK4NEwLXVaRjPFZ5K39Zjt42LFd6tEJ3ycXS"
 			]
 		}
 	},

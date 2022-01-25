@@ -35,7 +35,7 @@ contract Gemesis is
     bool public revealed = false;
     bool public onlyWhitelisted = true;
 
-    uint256[9668] randomMintOrderArray;
+    uint256[] randomMintOrderArray = new uint256[](9669);
     mapping(address => bool) public whitelisted;
     mapping(uint256 => string) private tokenURIs; 
     mapping(address => uint256) public addressMintedBalance;
@@ -64,63 +64,6 @@ contract Gemesis is
         setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
     }
     
-    //VRF functions
-    // call this function after transaction LINK on random contract
-    function initializeRandomNumberGenerator (address _randomNumberGeneratorAddress)public onlyOwner {
-        randomNumberGenerator = RandomNumberGenerator(_randomNumberGeneratorAddress);
-        randomNumberGeneratorAddress = _randomNumberGeneratorAddress;
-        randomNumberGenerator.getRandomNumber();
-    }
-    
-    //call this function after random result was callbacked
-    function getRandomNumber() public view onlyOwner returns (uint256){
-        return randomNumberGenerator.getRandomResult();
-    }
-    
-    function initializeRandomOrder() public onlyOwner {
-        createRandomOrder(randomNumberGenerator.getRandomResult(), maxSupply);
-    }
-
-    //TEST ME
-    function createRandomOrder(uint256 _randomNumber, uint256 _maxNumber)
-        public
-    {
-        require(_randomNumber != 0, "RandomResult hasnt arrived yet or is 0.");
-        uint256 localMaxNumber = _maxNumber;
-        uint256 counterNumber = 0;
-        
-        for (uint256 i = 0; i < localMaxNumber; i++) {
-            uint256 value = uint256(keccak256(abi.encode(_randomNumber, i)));
-            value = value % _maxNumber + 1;
-            if(!randomNumberExists[value])
-            {
-                randomNumberExists[value] = true;
-                randomMintOrder[i - counterNumber] = value;
-            } else {
-                counterNumber++;
-                localMaxNumber++;
-            }
-        }
-    }
-
-    function ArrCreateRandomOrder(uint256 _randomNumber, uint256 _maxNumber)
-        public
-    {
-        require(_randomNumber != 0, "RandomResult hasnt arrived yet or is 0.");
-
-        for (uint256 i = 0; i < randomMintOrderArray.length; i++) {
-            randomMintOrderArray[i] = i;
-        }
-
-        for (uint256 i = randomMintOrderArray.length - 1; i >= 0; i--) {
-            uint256 value = uint256(keccak256(abi.encode(_randomNumber, i)));
-            value = value % randomMintOrderArray.length;
-
-            uint256 temp = randomMintOrderArray[value];
-            randomMintOrderArray[value] = randomMintOrderArray[i];
-            randomMintOrderArray[i] = temp;
-        }
-    }
     
       // internal
     function _baseURI() internal view virtual override returns (string memory) {
@@ -163,13 +106,52 @@ contract Gemesis is
             
         }
         for(uint256 i = 0; i < _mintAmount; i++){
-            _safeMint(msg.sender, randomMintOrder[supply + 1]);
+            _safeMint(msg.sender, getRandomId(supply));
             addressMintedBalance[msg.sender]++;
             supply = totalSupply();
         }
         
     }
     
+//VRF functions
+    // call this function after transaction LINK on random contract
+    function initializeRandomNumberGenerator (address _randomNumberGeneratorAddress)public onlyOwner {
+        randomNumberGenerator = RandomNumberGenerator(_randomNumberGeneratorAddress);
+        randomNumberGeneratorAddress = _randomNumberGeneratorAddress;
+        randomNumberGenerator.getRandomNumber();
+    }
+    
+    //call this function after random result was callbacked
+    function getRandomNumber() public view onlyOwner returns (uint256){
+        return randomNumberGenerator.getRandomResult();
+    }
+
+    //TESTME
+    function getRandomId(uint256 mintIndex)
+        public returns (uint256)
+    {
+        require(randomNumberGenerator.getRandomResult() != 0, "RandomResult hasnt arrived yet or is 0.");
+        uint256 id;
+        uint256 randomIndex = uint256(keccak256(abi.encode(randomNumberGenerator.getRandomResult(), mintIndex)));
+        randomIndex = randomIndex % (randomMintOrderArray.length); // this can max be 9668 with mod which is needed to get the right position from array but for id  we need + 1 later
+        
+        if (randomMintOrderArray[randomIndex] == 0)
+        {
+            id = randomIndex;
+        } else 
+        {
+            id = randomMintOrderArray[randomIndex];
+        }
+        randomMintOrderArray.pop();
+        if (randomIndex > randomMintOrderArray.length - 1)
+        {
+            randomIndex = randomMintOrderArray.length - 1;
+        }
+        randomMintOrderArray[randomIndex] = randomMintOrderArray.length - 1;
+        return (id + 1); 
+    }
+    
+
     function getBalanceOfAddress(address _address) public view returns (uint256){
         return addressMintedBalance[_address];
     }
