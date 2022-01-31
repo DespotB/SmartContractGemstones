@@ -146,7 +146,7 @@ contract Gemesis is
         randomMintOrder.pop();
         if (randomIndex > randomMintOrder.length - 1)
         {
-            randomIndex = randomMintOrder.length - 1;
+            randomIndex = randomMintOrder.length;
         }
         randomMintOrder[randomIndex] = randomMintOrder.length - 1;
         return (id + 1); 
