@@ -31,7 +31,7 @@ contract Gemesis is
     bool public revealed = false;
     bool public onlyWhitelisted = true;
 
-    uint256[] randomMintOrder = new uint256[](9669);
+    uint16[] randomMintOrder = new uint16[](9669);
     address[] public whitelistAddresses;
     mapping(address => uint16) public addressMintedBalance;
     
@@ -143,12 +143,15 @@ contract Gemesis is
         {
             id = randomMintOrder[randomIndex];
         }
-        randomMintOrder.pop();
-        if (randomIndex > randomMintOrder.length - 1)
-        {
-            randomIndex = randomMintOrder.length;
+
+        if (randomMintOrder[randomMintOrder.length - 1] == 0) {
+            randomMintOrder[randomIndex] = uint16(randomMintOrder.length - 1); 
+            randomMintOrder.pop();
+        } else {
+            randomMintOrder[randomIndex] = randomMintOrder[randomMintOrder.length -1];
+            randomMintOrder.pop();
         }
-        randomMintOrder[randomIndex] = randomMintOrder.length - 1;
+
         return (id + 1); 
     }
     
