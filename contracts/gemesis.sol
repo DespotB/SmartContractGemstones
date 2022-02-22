@@ -52,7 +52,7 @@ contract Gemesis is
         setCurrentMintSupply(_currentMintSupply);
         
         //For testing
-        //setBaseURI("ipfs://Qmd6dZtxs41qtyFyxaW5rG5MYQFYeESs7rpC5XwhNwqAzy/");
+        //setBaseURI("ipfs://QmcJEgF5KqYKYHfmZEgPddBN2uzAhjxkE81wp39HuSgf8z/");
         //setNotRevealedURI("https://gateway.pinata.cloud/ipfs/QmaUw3k5G56ajTCCM73AunrSBcWNYXuzCVbjPtfxeq2gNP");
     }
     
