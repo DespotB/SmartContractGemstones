@@ -24,15 +24,16 @@ contract Gemesis is
     uint16 public maxSupply = 9669;
     uint16 public currentMintSupply = 0;
     uint8 public maxMintAmount = 20;
-    uint8 public maxMintAmountWhitelisted = 10;
 
     uint64 public cost = 0.00001 ether;
     bool public paused = false;
     bool public revealed = false;
     bool public onlyWhitelisted = true;
+    bool public onlyOg = true;
 
     uint16[] randomMintOrder = new uint16[](9669);
     address[] public whitelistAddresses;
+    address[] public ogAddresses;
     mapping(address => uint16) public addressMintedBalance;
     
     /**  TEST WHITELIST ADDRESSLIST
@@ -90,22 +91,36 @@ contract Gemesis is
         require(supply + _mintAmount <= maxSupply, "The amount of Gemesis you are trying to mint is not available");
         
         if(msg.sender != owner()) {
-            if(onlyWhitelisted == true) {
-                require(isWhiteListed(msg.sender),"User is not Whitelisted!");
+            if(onlyOg == true){
+                require(isOg(msg.sender),"User is not an OG!");
                 uint256 ownerTokenCount = balanceOf(msg.sender);
-                require(ownerTokenCount < maxMintAmountWhitelisted); 
-            } else {   
-                require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
+                require(ownerTokenCount < maxMintAmount); 
+            } else {
+                if(onlyWhitelisted == true) {
+                    require(isWhiteListed(msg.sender),"User is not Whitelisted!");
+                    uint256 ownerTokenCount = balanceOf(msg.sender);
+                    require(ownerTokenCount < maxMintAmount); 
+                } else {   
+                    require(_mintAmount <= maxMintAmount, "You cannot mint that many NFT's in one mint");
+                }
             }
             require(msg.value >= cost * _mintAmount, "Insufficient funds");
         }
-        
+    
         for(uint16 i = 0; i < _mintAmount; i++){
             _safeMint(msg.sender, getRandomId(supply));
             addressMintedBalance[msg.sender]++;
             supply = totalSupply();
         }
-        
+    }
+
+    function isOg(address _user)public view returns (bool) {
+        for(uint16 i = 0; i < ogAddresses.length; i++){
+            if(ogAddresses[i] == _user){
+                return true;
+            }
+        }
+        return false;
     }
 
     function isWhiteListed(address _user)public view returns (bool) {
@@ -172,10 +187,6 @@ contract Gemesis is
         maxMintAmount = _newMaxMintAmount;
     } 
 
-    function setMaxMintAmountWhitelisted(uint8 _newMaxMintAmountWhitelisted) public onlyOwner() {
-        maxMintAmountWhitelisted = _newMaxMintAmountWhitelisted;
-    }
-
     function setCurrentMintSupply(uint16 _newCurrentMintSupply) public onlyOwner() {
         currentMintSupply = _newCurrentMintSupply;
     }
@@ -200,12 +211,20 @@ contract Gemesis is
         onlyWhitelisted = _state;
     }
 
-
     function whitelistUsers(address[] calldata _users) public onlyOwner {
         delete whitelistAddresses;
         whitelistAddresses = _users;
     }
 
+    function setOnlyOgs(bool  _state) public onlyOwner {
+        onlyOg = _state;
+    }
+
+    function ogUsers(address[] calldata _users) public onlyOwner {
+        delete ogAddresses;
+        ogAddresses = _users;
+    }
+   
     function withdraw(uint256 _amount) public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{value: _amount}("");
         require(success, "Failed to send eth");

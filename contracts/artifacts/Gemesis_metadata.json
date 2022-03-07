@@ -308,6 +308,25 @@
 						"type": "address"
 					}
 				],
+				"name": "isOg",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					}
+				],
 				"name": "isWhiteListed",
 				"outputs": [
 					{
@@ -322,19 +341,6 @@
 			{
 				"inputs": [],
 				"name": "maxMintAmount",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "",
-						"type": "uint8"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "maxMintAmountWhitelisted",
 				"outputs": [
 					{
 						"internalType": "uint8",
@@ -379,6 +385,51 @@
 						"internalType": "string",
 						"name": "",
 						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ogAddresses",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_users",
+						"type": "address[]"
+					}
+				],
+				"name": "ogUsers",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "onlyOg",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -625,12 +676,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint8",
-						"name": "_newMaxMintAmountWhitelisted",
-						"type": "uint8"
+						"internalType": "string",
+						"name": "_notRevealedURI",
+						"type": "string"
 					}
 				],
-				"name": "setMaxMintAmountWhitelisted",
+				"name": "setNotRevealedURI",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -638,12 +689,12 @@
 			{
 				"inputs": [
 					{
-						"internalType": "string",
-						"name": "_notRevealedURI",
-						"type": "string"
+						"internalType": "bool",
+						"name": "_state",
+						"type": "bool"
 					}
 				],
-				"name": "setNotRevealedURI",
+				"name": "setOnlyOgs",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -953,11 +1004,11 @@
 	},
 	"sources": {
 		"@chainlink/contracts/src/v0.8/VRFConsumerBase.sol": {
-			"keccak256": "0x778c9d88cd6d94ae866c1c3f5fec6022f07e39280d3b6d581c8cceb8a5ac4b1e",
+			"keccak256": "0xff9e7d773545a1a5d73106e72bfb429da79c1cc4d893fb62051df801d2e61469",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a2fe7cac98f6c86e4e3ef299bb91f3917d4171548e39da72c7da392c9d5d5815",
-				"dweb:/ipfs/QmT8jh2DR1VU8554hGMbjX6BkACT96FZBETbN5KkStBvYP"
+				"bzz-raw://68ff9557dad6da8108073dadcbfe5cd1f45106c2f890443eacd3bf8d59955d4e",
+				"dweb:/ipfs/QmSKYkP8wNX7MKYrCroFps62gdxEwwrZwsz4RLc6XzNkxi"
 			]
 		},
 		"@chainlink/contracts/src/v0.8/VRFRequestIDBase.sol": {
@@ -1081,19 +1132,19 @@
 			]
 		},
 		"contracts/RandomNumberGenerator.sol": {
-			"keccak256": "0x7941fba5a7d0a09b21d789a3de973e965d69cf6a1edd57f5539351e3fa243ac6",
+			"keccak256": "0xf73f768cf9d4dd4bdb3ffa65a33d75e82f0db2019e6a4ba978a9e7f69e7a175b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://05c7a9f56a4bd49d4223f0a2d33e8c23801aefd1c3c6c83546ac6f62697d2bf5",
-				"dweb:/ipfs/QmWN7hJTMv6Ytd5KyKhSTz7PQfHZ9eywTbLtDQViM3uo6P"
+				"bzz-raw://0b06ab60695ba52833c3190404d7e410a510d0c5f3b94158747f97f2533ec979",
+				"dweb:/ipfs/QmTkS4fJAaKJ9jy3LAmcSBezSxng3jYkYNrgtDWtKNCQ1p"
 			]
 		},
 		"contracts/gemesis.sol": {
-			"keccak256": "0x246f7e45b0bdf8efe25e2131c456640615a69faa3b8b5962cf79f4a2013e359f",
+			"keccak256": "0x77133a04e0d111ffd3e4ef24187a6b0ed29bc31a240c3a1561f90f08586f106f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4d615e630c52e27e9df4a6c615e28ddcfcc051d2eddd6fd49f9568d346939722",
-				"dweb:/ipfs/QmW7DzbVou2kFtEjhDtdbR4gAnEZJ2x6q3LcaEraZDU2F4"
+				"bzz-raw://16c668e3f675ce1be859f95cfe86c1da18cde67fdda14e5024e53db97bac48ea",
+				"dweb:/ipfs/QmPCHDFMjW9D2cG6vMtRYQVYWSeXv9Vj14fnt1wQ45wi7Q"
 			]
 		}
 	},
